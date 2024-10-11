@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
+const {body, validationResult} = require('express-validator');
 const Employee = require('../models/employee'); // Import the employee model
 
 // Get All employees
 router.get('/employees', async (req, res) => {
     try {
         const employees = await Employee.find();
-        if (employees.length == 0) {
+        if (employees.length === 0) {
             return res.status(400).json({message: "No employees found"});
         }
         res.status(200).json(employees);
@@ -17,7 +18,20 @@ router.get('/employees', async (req, res) => {
 });
 
 // Create a new Employee
-router.post('/employees', async(req, res) => {
+router.post('/employees',[
+    // Data Validation:
+    body('first_name').notEmpty().withMessage('First name is required'),
+    body('last_name').notEmpty().withMessage('Last name is required'),
+    body('email').isEmail().withMessage('Email must be valid'),
+    body('position').notEmpty().withMessage('Position is required'),
+    body('salary').isNumeric().withMessage('Salary must be a number'),
+    body('department').notEmpty().withMessage('Department is required')
+], async(req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({errors: errors.array()});
+    }
+    
     const {first_name, last_name, email, position, salary, department } = req.body;
 
     try {
@@ -56,7 +70,15 @@ router.get('/employees/:id', async (req, res) => {
 })
 
 // Update Employee
-router.put('/employees/:id', async (req, res) => {
+router.put('/employees/:id', [
+    // Data Validation:
+    body('first_name').optional().notEmpty().withMessage('First name is required'),
+    body('last_name').optional().notEmpty().withMessage('Last name is required'),
+    body('email').optional().isEmail().withMessage('Email must be valid'),
+    body('position').optional().notEmpty().withMessage('Position is required'),
+    body('salary').optional().isNumeric().withMessage('Salary must be a number'),
+    body('department').optional().notEmpty().withMessage('Department is required')
+], async (req, res) => {
     const {first_name, last_name, email, position, salary, department} = req.body;
 
     try {
