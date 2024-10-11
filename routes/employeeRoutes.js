@@ -79,13 +79,24 @@ router.put('/employees/:id', [
     body('salary').optional().isNumeric().withMessage('Salary must be a number'),
     body('department').optional().notEmpty().withMessage('Department is required')
 ], async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({errors: errors.array()});
+    }
     const {first_name, last_name, email, position, salary, department} = req.body;
 
     try {
+        if (email) {
+            const existingEmployee = await Employee.findOne({ email: email.toLowerCase(), _id: { $ne: req.params.id } });
+            if (existingEmployee) {
+                return res.status(400).json({ message: 'Email already in use by another employee' });
+            }
+        }
+
         const updatedEmployee = await Employee.findByIdAndUpdate(
             req.params.id,
             {first_name, last_name, email, position, salary, department },
-            {new: true}
+            {new: true, runValidators: true}
         );
 
         if (!updatedEmployee) {
@@ -95,7 +106,8 @@ router.put('/employees/:id', [
         res.status(200).json({message: 'Employee Updated', updatedEmployee});
 
     } catch (error) {
-        res.status(500).json({message: 'Internal Server Error'});
+        console.error('Error updating employee:', error);
+        res.status(500).json({message: 'Internal Server Error', error});
     }
 });
 
@@ -106,8 +118,7 @@ router.delete('/employees/:id', async(req, res) => {
        if (!deletedEmployee) {
             return res.status(404).json({message:'Employee not found'});
        }
-
-       res.status(204).json({message: 'Employee deleted successfully'});
+       res.status(200).json({message: 'Employee deleted successfully'});
     } catch (error) {
         res.status(500).json({message: 'Internal Server Error'});
     }
