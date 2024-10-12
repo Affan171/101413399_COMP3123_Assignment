@@ -2,19 +2,22 @@
     "version": 2,
     "builds": [
       {
-        "src": "app.js",  
-        "use": "@vercel/node"  
+        "src": "app.js",
+        "use": "@vercel/node"
       }
     ],
     "routes": [
       {
-        "src": "/api/(.*)",  
-        "dest": "app.js"      
+        "src": "/api/(.*)",
+        "dest": "app.js"
       },
       {
         "src": "/(.*)",
-        "dest": "app.js"      
+        "dest": "app.js"
       }
-    ]
-}
+    ],
+    "env": {
+      "MONGO_URI": "mongodb+srv://Affan:Affskh%3F12345@cluster0.iqck3.mongodb.net/Assignment1?retryWrites=true&w=majority&appName=Cluster0" 
+    }
+  }
   
