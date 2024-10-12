@@ -20,8 +20,15 @@ mongoose.connect(MONGO_URI).then(() => {
 app.use('/api/v1/user', userRoutes);
 app.use('/api/v1/employee', employeeRoutes);
 
+// Root endpoint:
+app.get('/', (req, res) => {
+  res.send('<h1>Welcome! This is my COMP3123-Assignment1</h1>');
+});
+
 // Server Port
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+module.exports = app;
