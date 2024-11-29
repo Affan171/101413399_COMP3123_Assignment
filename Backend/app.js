@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const userRoutes = require('./routes/userRoutes');
 const employeeRoutes = require('./routes/employeeRoutes');
+require('dotenv').config();
 const app = express();
 
 // Middleware to parse JSON
@@ -11,9 +12,11 @@ app.use(express.json());
 // const MONGO_URI = "mongodb+srv://Affan:Affskh%3F12345@cluster0.iqck3.mongodb.net/Assignment1?retryWrites=true&w=majority&appName=Cluster0";
 
 const MONGO_URI = process.env.MONGO_URI;
+console.log(MONGO_URI);
 
 mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
   console.log('Connected to MongoDB');
+  console.log(MONGO_URI);
 }).catch((err) => {
   console.log('Failed to connect to MongoDB', err);
 })
@@ -28,9 +31,10 @@ app.get('/', (req, res) => {
 });
 
 // // Server Port
-// const PORT = process.env.PORT || 3000;
-// app.listen(PORT, () => {
-//   console.log(`Server is running on port ${PORT}`);
-// });
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
 
 module.exports = app;
+
