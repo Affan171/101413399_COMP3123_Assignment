@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import addEmployee from "../../Services/employeeService";
+import {addEmployee} from "../../Services/employeeService";
 
 // onEmployeeAdded is a placeholder for the function to update the list of employees in the parent class.
 const AddEmployee = ({ onEmployeeAdded }) => {
