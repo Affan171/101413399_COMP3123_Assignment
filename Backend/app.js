@@ -9,6 +9,19 @@ const app = express();
 // Middleware to parse JSON
 app.use(express.json());
 
+// CORS Configuration
+const corsOptions = {
+  origin: [
+    'http://localhost:3000', // Allow local frontend
+    'https://front-end.vercel.app' // Allow deployed frontend
+  ],
+  optionsSuccessStatus: 200,
+}
+
+// Apply CORS middleware before defining routes
+app.use(cors(corsOptions));
+
+
 const MONGO_URI = process.env.MONGO_URI;
 
 mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
@@ -32,18 +45,6 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-
-
-// CORS Configuration
-const corsOptions = {
-  origin: [
-    'http://localhost:3000', // Allow local frontend
-    'https://front-end.vercel.app' // Allow deployed frontend
-  ],
-  optionsSuccessStatus: 200,
-}
-
-app.use(cors(corsOptions));
 
 module.exports = app;
 
