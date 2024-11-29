@@ -16,6 +16,7 @@ const EmployeeList = () => {
   const loadEmployees = async () => {
     try {
       const employees = await fetchEmployees();
+      console.log('Data received from backend:', employees);
       setEmployees(employees);
     } catch (error) {
       console.log("Error fetching employees:", error);
