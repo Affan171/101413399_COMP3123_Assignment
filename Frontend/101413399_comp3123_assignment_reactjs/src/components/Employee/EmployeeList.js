@@ -9,7 +9,9 @@ const EmployeeList = () => {
   const [error, setError] = useState("");
 
   // Fetch employees when the component mounts
-  useEffect(() => {}, []);
+  useEffect(() => {
+    loadEmployees();
+  }, []);
 
   const loadEmployees = async () => {
     try {
@@ -26,7 +28,7 @@ const EmployeeList = () => {
       await deleteEmployee(id);
       // Why dont we call loadEmployees here to show the updated list
       // because when we delete the employee it would be deleted from
-      // the database?
+      // the database? Making another call to API would cause server load and network latency.
       setEmployees(employees.filter((employee) => employee._id !== id));
     } catch (error) {
       console.error("Error fetching employees:", error);
