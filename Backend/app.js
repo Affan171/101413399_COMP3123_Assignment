@@ -2,17 +2,14 @@ const express = require('express');
 const mongoose = require('mongoose');
 const userRoutes = require('./routes/userRoutes');
 const employeeRoutes = require('./routes/employeeRoutes');
+const cors = require('cors')
 require('dotenv').config();
 const app = express();
 
 // Middleware to parse JSON
 app.use(express.json());
 
-// MongoDB Connection
-// const MONGO_URI = "mongodb+srv://Affan:Affskh%3F12345@cluster0.iqck3.mongodb.net/Assignment1?retryWrites=true&w=majority&appName=Cluster0";
-
 const MONGO_URI = process.env.MONGO_URI;
-console.log(MONGO_URI);
 
 mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
   console.log('Connected to MongoDB');
@@ -30,11 +27,23 @@ app.get('/', (req, res) => {
   res.send('<h1>Welcome! This is my COMP3123-Assignment1</h1>');
 });
 
-// // Server Port
+// Server Port
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+
+// CORS Configuration
+const corsOptions = {
+  origin: [
+    'http://localhost:3000', // Allow local frontend
+    'https://front-end.vercel.app' // Allow deployed frontend
+  ],
+  optionsSuccessStatus: 200,
+}
+
+app.use(cors(corsOptions));
 
 module.exports = app;
 
