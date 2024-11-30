@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require('../models/user'); // Import the user model
 const bcrypt = require('bcryptjs'); // For hashing the password
 const {body, validationResult} = require('express-validator');
+const jwt = require('jsonwebtoken');
 
 // User Signup
 router.post("/signup",[
@@ -36,7 +37,14 @@ router.post("/signup",[
 
         // Save the user
         await newUser.save();
-        res.status(201).json({message: 'User created successfully', user_id: newUser}) 
+
+        const token = jwt.sign({userId: newUser._id}, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRES_IN})
+
+        res.status(201).json({
+            message: 'User created successfully',
+            token,
+            user: { id: newUser._id, username: newUser.username, email: newUser.email }
+        }); 
     } catch (error) {
         res.status(500).json({message: 'Internal Server Error', error});
     }
@@ -67,7 +75,15 @@ router.post('/login',[
             return res.status(400).json("Invalid email or password");
         }
 
-        res.status(200).json({message: 'Login successful', user});
+        // Generate a JWT token
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
+
+        res.status(200).json({
+            message: 'Login successful',
+            token,
+            user: { id: user._id, username: user.username, email: user.email }
+        });
+
     } catch (error) {
         res.status(500).json({message: 'Internal Server Error', error});
     }
