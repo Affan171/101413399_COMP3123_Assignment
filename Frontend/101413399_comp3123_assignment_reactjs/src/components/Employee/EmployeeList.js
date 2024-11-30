@@ -4,35 +4,35 @@ import AddEmployee from "./AddEmployee";
 import EditEmployee from "./EditEmployee";
 
 const EmployeeList = () => {
-  const [employees, setEmployees] = useState([]);
-  const [editingEmployee, setEditingEmployee] = useState(null);
-  const [error, setError] = useState("");
+  const [employees, setEmployees] = useState([]); // Stores employee data
+  const [editingEmployee, setEditingEmployee] = useState(null); // Tracks the employee being edited
+  const [error, setError] = useState(""); // Handles any errors
 
   // Fetch employees when the component mounts
   useEffect(() => {
     loadEmployees();
   }, []);
 
+  // Fetch employees from the backend
   const loadEmployees = async () => {
     try {
-      const employees = await fetchEmployees();
-      console.log('Data received from backend:', employees);
-      setEmployees(employees);
+      const response = await fetchEmployees();
+      console.log("Data received from backend:", response);
+      setEmployees(response); // Set the employee data
     } catch (error) {
-      console.log("Error fetching employees:", error);
+      console.error("Error fetching employees:", error);
       setError("Failed to fetch employees. Please try again.");
     }
   };
 
+  // Handle delete operation
   const handleDelete = async (id) => {
     try {
-      await deleteEmployee(id);
-      // Why dont we call loadEmployees here to show the updated list
-      // because when we delete the employee it would be deleted from
-      // the database? Making another call to API would cause server load and network latency.
+      await deleteEmployee(id); // Call delete API
+      // Filter out the deleted employee from the state
       setEmployees(employees.filter((employee) => employee._id !== id));
     } catch (error) {
-      console.error("Error fetching employees:", error);
+      console.error("Error deleting employee:", error);
       setError("Failed to delete employee.");
     }
   };
@@ -41,10 +41,13 @@ const EmployeeList = () => {
     <div>
       <h1>Employee Management</h1>
 
+      {/* Display error message if any */}
       {error && <p style={{ color: "red" }}>{error}</p>}
 
+      {/* Add Employee Form */}
       <AddEmployee onEmployeeAdded={loadEmployees} />
 
+      {/* Employee Table */}
       {employees.length > 0 ? (
         <table>
           <thead>
@@ -56,13 +59,14 @@ const EmployeeList = () => {
             </tr>
           </thead>
           <tbody>
-            {employees.map((employee) => {
+            {/* Map through the employees and render rows */}
+            {employees.map((employee) => (
               <tr key={employee._id}>
                 <td>
                   {employee.first_name} {employee.last_name}
                 </td>
-                <td>{employee.email} </td>
-                <td>{employee.position} </td>
+                <td>{employee.email}</td>
+                <td>{employee.position}</td>
                 <td>
                   <button onClick={() => setEditingEmployee(employee)}>
                     Edit
@@ -71,18 +75,19 @@ const EmployeeList = () => {
                     Delete
                   </button>
                 </td>
-              </tr>;
-            })}
+              </tr>
+            ))}
           </tbody>
         </table>
       ) : (
         <p>No employees found</p>
       )}
 
+      {/* Edit Employee Form (Rendered Conditionally) */}
       {editingEmployee && (
         <EditEmployee
           employee={editingEmployee}
-          onEmployeeAdded={loadEmployees}
+          onEmployeeUpdated={loadEmployees}
           onClose={() => setEditingEmployee(null)}
         />
       )}
