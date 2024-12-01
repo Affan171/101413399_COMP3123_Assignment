@@ -13,7 +13,7 @@ app.use(express.json());
 const corsOptions = {
   origin: [
     'http://localhost:3000', // Allow local frontend
-    'https://front-end.vercel.app' // Allow deployed frontend
+     process.env.FRONTEND_URL // Allow deployed frontend
   ],
   optionsSuccessStatus: 200,
 }
