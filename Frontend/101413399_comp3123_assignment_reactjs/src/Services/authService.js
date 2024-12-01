@@ -14,7 +14,8 @@ export const signup = (userData) => {
 }
 
 // Logout needs to be implemented
-// // Logout function (optional, for clearing token on the client side)
-// export const logout = () => {
-//     localStorage.removeItem('token'); // Clear token from localStorage
-// };
+// Logout function (optional, for clearing token on the client side)
+export const logout = () => {
+    localStorage.removeItem('token'); // Clear token from localStorage
+    window.location.href = '/login'; // Redirect to login page
+};
