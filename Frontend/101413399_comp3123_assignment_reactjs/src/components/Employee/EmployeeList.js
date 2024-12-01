@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { deleteEmployee, fetchEmployees } from "../../Services/employeeService";
 import AddEmployee from "./AddEmployee";
 import EditEmployee from "./EditEmployee";
@@ -7,6 +8,7 @@ const EmployeeList = () => {
   const [employees, setEmployees] = useState([]); // Stores employee data
   const [editingEmployee, setEditingEmployee] = useState(null); // Tracks the employee being edited
   const [error, setError] = useState(""); // Handles any errors
+  const navigate = useNavigate(); // For navigation
 
   // Fetch employees when the component mounts
   useEffect(() => {
@@ -37,9 +39,18 @@ const EmployeeList = () => {
     }
   };
 
+  // Logout function
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // Clear the token from localStorage
+    navigate("/login"); // Redirect to login page
+  };
+
   return (
     <div>
-      <h1>Employee Management</h1>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <h1>Employee Management</h1>
+        <button onClick={handleLogout}>Logout</button>
+      </div>
 
       {/* Display error message if any */}
       {error && <p style={{ color: "red" }}>{error}</p>}
