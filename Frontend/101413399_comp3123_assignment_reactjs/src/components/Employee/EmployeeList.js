@@ -20,11 +20,14 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  TextField,
 } from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 
 const EmployeeList = () => {
   const [employees, setEmployees] = useState([]); // Stores employee data
+  const [filteredEmployees, setFilteredEmployees] = useState([]); // Filtered employees
+  const [searchQuery, setSearchQuery] = useState(""); // Search query
   const [error, setError] = useState(""); // Handles any errors
   const [anchorEl, setAnchorEl] = useState(null); // For dropdown menu
   const [selectedEmployee, setSelectedEmployee] = useState(null); // Tracks the employee to be deleted
@@ -40,12 +43,27 @@ const EmployeeList = () => {
   const loadEmployees = async () => {
     try {
       const response = await fetchEmployees();
-      console.log("Data received from backend:", response);
       setEmployees(response); // Set the employee data
+      setFilteredEmployees(response); // Initialize filtered employees
     } catch (error) {
       console.error("Error fetching employees:", error);
       setError("Failed to fetch employees. Please try again.");
     }
+  };
+
+  // Handle search query change
+  const handleSearchChange = (e) => {
+    const query = e.target.value.toLowerCase();
+    setSearchQuery(query);
+
+    // Filter employees based on the query
+    const filtered = employees.filter(
+      (employee) =>
+        employee.first_name.toLowerCase().includes(query) ||
+        employee.last_name.toLowerCase().includes(query) ||
+        employee.email.toLowerCase().includes(query)
+    );
+    setFilteredEmployees(filtered);
   };
 
   // Handle delete operation
@@ -53,6 +71,7 @@ const EmployeeList = () => {
     try {
       await deleteEmployee(selectedEmployee._id); // Call delete API
       setEmployees(employees.filter((employee) => employee._id !== selectedEmployee._id));
+      setFilteredEmployees(filteredEmployees.filter((employee) => employee._id !== selectedEmployee._id));
       setOpenDialog(false); // Close the dialog
     } catch (error) {
       console.error("Error deleting employee:", error);
@@ -122,6 +141,16 @@ const EmployeeList = () => {
           Employee List
         </Typography>
 
+        {/* Search Bar */}
+        <TextField
+          label="Search Employees"
+          variant="outlined"
+          fullWidth
+          value={searchQuery}
+          onChange={handleSearchChange}
+          sx={{ marginBottom: 2 }}
+        />
+
         {/* Add Employee Button */}
         <Button
           variant="contained"
@@ -134,7 +163,7 @@ const EmployeeList = () => {
 
         {/* Employee Table */}
         {error && <Typography color="error">{error}</Typography>}
-        {employees.length > 0 ? (
+        {filteredEmployees.length > 0 ? (
           <TableContainer component={Paper}>
             <Table>
               <TableHead>
@@ -146,7 +175,7 @@ const EmployeeList = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {employees.map((employee) => (
+                {filteredEmployees.map((employee) => (
                   <TableRow key={employee._id}>
                     <TableCell>
                       {employee.first_name} {employee.last_name}
