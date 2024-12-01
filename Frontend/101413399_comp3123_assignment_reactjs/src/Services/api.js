@@ -3,7 +3,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'https://101413399-comp-3123-assignment-gixz.vercel.app/api/v1',
+    baseURL: process.env.REACT_APP_BACKEND_URL,
     timeout: 5000
 })
 
