@@ -4,15 +4,15 @@ import Login from './components/Login/Login';
 import Signup from './components/Signup/Signup';
 import Logout from './components/Logout/Logout';
 import EmployeeList from './components/Employee/EmployeeList';
+import AddEmployee from './components/Employee/AddEmployee';
+import EditEmployee from './components/Employee/EditEmployee';
 import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => {
     return (
         <Router>
             <Routes>
-                {/* Default route redirects to /login */}
-                <Route path="/" element={<Navigate to="/login" />} />
-                
+                <Route path="/" element={<Login />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/logout" element={<Logout />} />
@@ -24,11 +24,35 @@ const App = () => {
                         </ProtectedRoute>
                     }
                 />
-                {/* Catch-all route for undefined paths */}
-                <Route path="*" element={<h1>404 - Page Not Found</h1>} />
+                <Route
+                    path="/employees/add"
+                    element={
+                        <ProtectedRoute>
+                            <AddEmployee />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/employees/edit/:id"
+                    element={
+                        <ProtectedRoute>
+                            <EditEmployee />
+                        </ProtectedRoute>
+                    }
+                />
             </Routes>
         </Router>
     );
 };
 
 export default App;
+
+
+
+
+
+
+
+
+
+                

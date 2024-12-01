@@ -1,8 +1,16 @@
 import React, { useState } from "react";
-import {addEmployee} from "../../Services/employeeService";
+import { useNavigate } from "react-router-dom";
+import { addEmployee } from "../../Services/employeeService";
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Container,
+  Alert,
+} from "@mui/material";
 
-// onEmployeeAdded is a placeholder for the function to update the list of employees in the parent class.
-const AddEmployee = ({ onEmployeeAdded }) => {
+const AddEmployee = () => {
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -11,8 +19,8 @@ const AddEmployee = ({ onEmployeeAdded }) => {
     salary: "",
     department: "",
   });
-
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({
@@ -25,62 +33,88 @@ const AddEmployee = ({ onEmployeeAdded }) => {
     e.preventDefault();
     try {
       await addEmployee(formData);
-      onEmployeeAdded();
-      setFormData({
-        first_name: "",
-        last_name: "",
-        email: "",
-        position: "",
-        salary: "",
-        department: "",
-      });
-    } catch (error) {
-      console.log(error);
-      setError("Failed to add employee. Please check your input.");
+      navigate("/employees"); // Redirect to employee list after successful creation
+    } catch (err) {
+      console.error("Error adding employee:", err);
+      setError("Failed to add employee. Please try again.");
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <input
-        name="first_name"
-        placeholder="First Name"
-        value={formData.first_name}
-        onChange={handleChange}
-      />
-      <input
-        name="last_name"
-        placeholder="Last Name"
-        value={formData.last_name}
-        onChange={handleChange}
-      />
-      <input
-        name="email"
-        placeholder="Email"
-        value={formData.email}
-        onChange={handleChange}
-      />
-      <input
-        name="position"
-        placeholder="Position"
-        value={formData.position}
-        onChange={handleChange}
-      />
-      <input
-        name="salary"
-        placeholder="Salary"
-        value={formData.salary}
-        onChange={handleChange}
-      />
-      <input
-        name="department"
-        placeholder="Department"
-        value={formData.department}
-        onChange={handleChange}
-      />
-      <button type="submit">Add Employee</button>
-    </form>
+    <Container maxWidth="sm" sx={{ mt: 4 }}>
+      <Typography variant="h4" gutterBottom>
+        Add Employee
+      </Typography>
+      {error && <Alert severity="error">{error}</Alert>}
+      <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
+        <TextField
+          name="first_name"
+          label="First Name"
+          value={formData.first_name}
+          onChange={handleChange}
+          fullWidth
+          required
+          margin="normal"
+        />
+        <TextField
+          name="last_name"
+          label="Last Name"
+          value={formData.last_name}
+          onChange={handleChange}
+          fullWidth
+          required
+          margin="normal"
+        />
+        <TextField
+          name="email"
+          label="Email"
+          value={formData.email}
+          onChange={handleChange}
+          fullWidth
+          required
+          margin="normal"
+        />
+        <TextField
+          name="position"
+          label="Position"
+          value={formData.position}
+          onChange={handleChange}
+          fullWidth
+          required
+          margin="normal"
+        />
+        <TextField
+          name="salary"
+          label="Salary"
+          value={formData.salary}
+          onChange={handleChange}
+          fullWidth
+          required
+          margin="normal"
+        />
+        <TextField
+          name="department"
+          label="Department"
+          value={formData.department}
+          onChange={handleChange}
+          fullWidth
+          required
+          margin="normal"
+        />
+        <Box sx={{ mt: 3, display: "flex", justifyContent: "space-between" }}>
+          <Button type="submit" variant="contained" color="primary">
+            Add Employee
+          </Button>
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={() => navigate("/employees")}
+          >
+            Cancel
+          </Button>
+        </Box>
+      </Box>
+    </Container>
   );
 };
 
