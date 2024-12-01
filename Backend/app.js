@@ -13,12 +13,15 @@ app.use(express.json());
 const corsOptions = {
   origin: [
     'http://localhost:3000', // Allow local frontend
-    process.env.FRONTEND_URL // Allow deployed frontend
+    'https://101413399-comp-3123-assignment.vercel.app', // Allow deployed frontend
   ],
-  optionsSuccessStatus: 200,
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  allowedHeaders: ["Content-Type", "Authorization"],
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // Allow specific HTTP methods
+  allowedHeaders: ["Content-Type", "Authorization"], // Allow specific headers
+  optionsSuccessStatus: 204, // Response status for preflight requests
 };
+
+app.use(cors(corsOptions));
+
 
 
 app.use(cors(corsOptions));
