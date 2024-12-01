@@ -13,10 +13,13 @@ app.use(express.json());
 const corsOptions = {
   origin: [
     'http://localhost:3000', // Allow local frontend
-     process.env.FRONTEND_URL // Allow deployed frontend
+    process.env.FRONTEND_URL // Allow deployed frontend
   ],
   optionsSuccessStatus: 200,
-}
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
 
 app.use(cors(corsOptions));
 
