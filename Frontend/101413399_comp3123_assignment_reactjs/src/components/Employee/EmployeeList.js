@@ -26,7 +26,7 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 
 const EmployeeList = () => {
   const [employees, setEmployees] = useState([]); // Stores employee data
-  const [filteredEmployees, setFilteredEmployees] = useState([]); // Filtered employees
+  const [filteredEmployees, setFilteredEmployees] = useState([]); // Filtered employee data
   const [searchQuery, setSearchQuery] = useState(""); // Search query
   const [error, setError] = useState(""); // Handles any errors
   const [anchorEl, setAnchorEl] = useState(null); // For dropdown menu

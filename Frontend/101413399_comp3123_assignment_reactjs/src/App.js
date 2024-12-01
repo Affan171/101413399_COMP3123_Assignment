@@ -2,7 +2,6 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/Login/Login';
 import Signup from './components/Signup/Signup';
-import Logout from './components/Logout/Logout';
 import EmployeeList from './components/Employee/EmployeeList';
 import AddEmployee from './components/Employee/AddEmployee';
 import EditEmployee from './components/Employee/EditEmployee';
@@ -15,7 +14,6 @@ const App = () => {
                 <Route path="/" element={<Login />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
-                <Route path="/logout" element={<Logout />} />
                 <Route
                     path="/employees"
                     element={

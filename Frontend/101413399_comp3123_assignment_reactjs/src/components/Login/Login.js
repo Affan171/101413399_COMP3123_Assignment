@@ -17,6 +17,7 @@ const Login = () => {
     try {
       const response = await login(credentials);
       localStorage.setItem("token", response.data.token);
+      localStorage.setItem("userEmail", response.data.user.email);
       navigate("/employees");
     } catch (err) {
       setError("Invalid email or password. Please try again.");
